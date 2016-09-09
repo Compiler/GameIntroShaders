@@ -52,6 +52,11 @@ public class ColorCore extends ApplicationAdapter {
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
 		
+		elapsedTime += Gdx.graphics.getDeltaTime();
+		if(elapsedTime > 2){
+			elapsedTime = 2;
+		}
+		
 		//clear
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -64,12 +69,13 @@ public class ColorCore extends ApplicationAdapter {
 		
 		
 		//batch.draw(foreground.getTexture(), 0, -50, width, height + 50);
-		foreground.draw(batch);
 		
+		foreground.draw(batch);
 		batch.setShader(program);
+		program.setUniformf(program.getUniformLocation("time"), elapsedTime);
+		logo.draw(batch);
 		
 		//batch.draw(logo.getTexture(), width / 4, 0, width / 2, 480);
-		logo.draw(batch);
 		
 		batch.end();
 	}
@@ -85,8 +91,9 @@ public class ColorCore extends ApplicationAdapter {
 		//foreground.getTexture().bind(1);
 		
 		logo = new Sprite(new Texture(Gdx.files.internal("Pariah_logo.png")));
-		int paddingX = width / 6;
-		logo.setBounds(paddingX / 2, height / 2.5f, width - paddingX, height / 1.5f);
+		//int paddingX = width / 6;
+		//logo.setBounds(paddingX / 2, height / 2.5f, width - paddingX, height / 1.5f);
+		logo.setBounds(width / 4, height / 4, width / 2, height / 2);
 		//logo.getTexture().bind(2);
 	}
 }
