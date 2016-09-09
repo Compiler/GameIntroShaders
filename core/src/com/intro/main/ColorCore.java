@@ -2,13 +2,14 @@ package com.intro.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 
 public class ColorCore extends ApplicationAdapter {
 	
@@ -24,9 +25,15 @@ public class ColorCore extends ApplicationAdapter {
 	
 	private OrthographicCamera cam;
 	private int width = 640, height = 480;
+	
+	Sound droplet;
+	Music ten;
+	
 	float[] rand;
 	@Override
 	public void create () {
+		
+		
 		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -39,12 +46,23 @@ public class ColorCore extends ApplicationAdapter {
 		vig = new ShaderProgram(Gdx.files.internal("shaders/vig.vert"), Gdx.files.internal("shaders/vig.frag"));
 		//def = batch.createDefaultShader();
 		
+		
+		droplet = Gdx.audio.newSound(Gdx.files.internal("water drop.mp3"));
+		long d = droplet.play();
+		droplet.setVolume(d, .5f);
+		droplet.loop();
+		
+		ten= Gdx.audio.newMusic(Gdx.files.internal("Tension.mp3"));
+		ten.setPosition(3);
+		ten.play();
+		
 		ShaderProgram.pedantic = false;
 		if (vig.getLog().length()!=0)
 	        System.out.println(vig.getLog());
 		
 	}
 	float elapsedTime = 0;
+	boolean pop = false;
 	@Override
 	public void render () {
 		cam.update();
@@ -52,11 +70,15 @@ public class ColorCore extends ApplicationAdapter {
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
 		
-		elapsedTime += Gdx.graphics.getDeltaTime();
-		if(elapsedTime > 2){
-			elapsedTime = 2;
+		elapsedTime += Gdx.graphics.getDeltaTime() / 5;
+		if(elapsedTime == .2f){
+			droplet.play();
+			
 		}
-		
+		if(elapsedTime > 1 && !pop){
+			pop = true;
+			elapsedTime = 0;
+		}
 		//clear
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -65,14 +87,14 @@ public class ColorCore extends ApplicationAdapter {
 		batch.setShader(vig);
 		
 		vig.setUniformf(vig.getUniformLocation("u_resolution"), width, height);
-		vig.setUniformf(vig.getUniformLocation("time"), elapsedTime / 10);
+		vig.setUniformf(vig.getUniformLocation("time"), !pop ? 0 : elapsedTime / 10);
 		
 		
 		//batch.draw(foreground.getTexture(), 0, -50, width, height + 50);
 		
 		foreground.draw(batch);
 		batch.setShader(program);
-		program.setUniformf(program.getUniformLocation("time"), elapsedTime);
+		program.setUniformf(program.getUniformLocation("time"), !pop ? 0 : elapsedTime);
 		logo.draw(batch);
 		
 		//batch.draw(logo.getTexture(), width / 4, 0, width / 2, 480);
