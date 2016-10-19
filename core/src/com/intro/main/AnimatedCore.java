@@ -25,6 +25,8 @@ public class AnimatedCore extends ApplicationAdapter {
 	private OrthographicCamera cam;
 	private int width = 640, height = 480;
 	float[] rand;
+	
+	//in time run
 	@Override
 	public void create () {
 		
@@ -53,6 +55,9 @@ public class AnimatedCore extends ApplicationAdapter {
 	float anim = .1f;
 	boolean popped = false;
 	int cnt = 0;
+	
+	
+	//stsatic mesh
 	@Override
 	public void render () {
 		cam.update();
@@ -95,6 +100,7 @@ public class AnimatedCore extends ApplicationAdapter {
 		batch.end();
 	}
 	
+	//initialize all the sprites and bind the correct textures
 	private void initSprites(){
 		
 		background = new Sprite(new Texture(Gdx.files.internal("DarkBackground.png")));
