@@ -11,6 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
+/*
+*@author Luke Roche
+*/
+
 public class ColorCore extends ApplicationAdapter {
 	
 	//Batch for Sprites
